@@ -1,12 +1,17 @@
 const http = require('http');
+const path = require('path');
 const Koa = require('koa');
 const Router = require('koa-router');
-//const { streamEvents } = require('http-event-stream');
 const koaBody = require('koa-body');
+const koaStatic = require('koa-static');
+const fs = require('fs');
 const uuid = require('uuid');
 const WS = require('ws');
 
 const app = new Koa();
+
+const public = path.join(__dirname, '/public')
+app.use(koaStatic(public));
 // CORS
 app.use(async (ctx, next) => {
   const origin = ctx.request.get('Origin');
@@ -56,6 +61,11 @@ const arrMessges = [];
 const clients = [];
 
 router.get('/index', async (ctx, next) => {
+  console.log('get index');
+  // ctx.response.body = 'hello';
+});
+
+router.get('/msg', async (ctx, next) => {
   console.log('get index');
   // ctx.response.body = 'hello';
 });
