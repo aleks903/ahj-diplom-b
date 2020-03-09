@@ -22,5 +22,8 @@
   },
   "engines": {
     "node": "10.x"
+  },
+  "devDependencies": {
+    "node-fetch": "^2.6.0"
   }
 }
