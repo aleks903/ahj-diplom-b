@@ -110,18 +110,26 @@ router.get('/msg/:numb', async (ctx, next) => {
 //   ctx.response.body = clients;
 // });
 
-router.post('/msg', async (ctx, next) => {
+router.post('/favorits', async (ctx, next) => {
 
   // create new contact
-  const msgOb = {...ctx.request.body};
-  arrMessges.push(msgOb);
-  // [...wsServer.clients][0].send(JSON.stringify(msgOb));
-    [...wsServer.clients]
-    .filter(o => {
-      return o.readyState === WS.OPEN;
-    })
-    .forEach(o => o.send(JSON.stringify(msgOb)));
-    // console.log({...ctx.request.body});
+  const msgOb = JSON.parse(ctx.request.body);
+  const itemIndex = arrMessges.findIndex((item) => JSON.parse(item).id === msgOb.id);
+  arrMessges[itemIndex].favorit = msgOb.value;
+  const obj = {
+    type: 'change-favorit',
+    id: msgOb.id,
+    value: msgOb.value,
+  };
+
+  // arrMessges.push(msgOb);
+
+  //   [...wsServer.clients]
+  //   .filter(o => {
+  //     return o.readyState === WS.OPEN;
+  //   })
+  //   .forEach(o => o.send(JSON.stringify(msgOb)));
+  console.log(obj);
   ctx.response.status = 204
 });
 
