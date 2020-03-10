@@ -105,10 +105,10 @@ router.get('/msg/:numb', async (ctx, next) => {
   // ctx.response.body = 'hello';
 });
 
-router.get('/users', async (ctx, next) => {
-  console.log('get index');
-  ctx.response.body = clients;
-});
+// router.get('/users', async (ctx, next) => {
+//   console.log('get index');
+//   ctx.response.body = clients;
+// });
 
 router.post('/msg', async (ctx, next) => {
 

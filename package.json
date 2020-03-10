@@ -8,7 +8,7 @@
     "start": "forever server.js",
     "watch": "forever -w server.js"
   },
-  "author": "coursar",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "forever": "^2.0.0",
@@ -17,13 +17,11 @@
     "koa-body": "^4.1.1",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
+    "node-fetch": "^2.6.0",
     "uuid": "^3.4.0",
     "ws": "^7.2.1"
   },
   "engines": {
     "node": "10.x"
-  },
-  "devDependencies": {
-    "node-fetch": "^2.6.0"
   }
 }
