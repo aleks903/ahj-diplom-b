@@ -67,52 +67,29 @@ let initMsg = false;
 router.get('/initmsg', async (ctx, next) => {
   if (!initMsg) {
     initMsg = true;
-
     const resp = await fetch('http://localhost:7070/msg.json');
     const body = await resp.text();
-    // console.log(body);
     const arrInitMsg = JSON.parse(body);
     arrMessges.push(...arrInitMsg);
-  
     ctx.response.body = arrMessges[0];
   }
   ctx.response.body = 'ok';
 });
 
-// router.get('/msg', async (ctx, next) => {
-//   console.log('get index');
-//   ctx.response.body = arrMessges;
-//   // ctx.response.body = 'hello';
-// });
+router.get('/allmsg', async (ctx, next) => {
+  console.log('get index');
+  ctx.response.body = arrMessges;
+});
 
 router.get('/msg/:numb', async (ctx, next) => {
-  // console.log('get index');
   console.log('get numb', ctx.params.numb);
-  // console.log(arrMessges[ctx.params.numb]);
   const endArr = arrMessges.length - ctx.params.numb;
   const startArr = (endArr - 10) < 0 ? 0 : (endArr - 10);
   const returnArr = arrMessges.slice(startArr, endArr).reverse();
-
-  // for (const item of returnArr) {
-  //   [...wsServer.clients]
-  //     .filter(o => {
-  //       return o.readyState === WS.OPEN;
-  //     })
-  //     .forEach(o => o.send(item));
-  // }
-
   ctx.response.body = returnArr;
-  // ctx.response.body = 'hello';
 });
 
-// router.get('/users', async (ctx, next) => {
-//   console.log('get index');
-//   ctx.response.body = clients;
-// });
-
 router.post('/favorits', async (ctx, next) => {
-
-  // create new contact
   const msgOb = JSON.parse(ctx.request.body);
   const itemIndex = arrMessges.findIndex((item) => JSON.parse(item).id === msgOb.id);
   arrMessges[itemIndex].favorit = msgOb.value;
@@ -121,48 +98,12 @@ router.post('/favorits', async (ctx, next) => {
     id: msgOb.id,
     value: msgOb.value,
   };
-
-  // arrMessges.push(msgOb);
-
-  //   [...wsServer.clients]
-  //   .filter(o => {
-  //     return o.readyState === WS.OPEN;
-  //   })
-  //   .forEach(o => o.send(JSON.stringify(msgOb)));
-  console.log(obj);
   ctx.response.status = 204
 });
-
-// router.post('/initmsg', async (ctx, next) => {
-
-//   // create new contact
-//   const msgOb = {...ctx.request.body};
-//   arrMessges.push(msgOb);
-//   // [...wsServer.clients][0].send(JSON.stringify(msgOb));
-//     [...wsServer.clients]
-//     .filter(o => {
-//       return o.readyState === WS.OPEN;
-//     })
-//     .forEach(o => o.send(JSON.stringify(msgOb)));
-//     // console.log({...ctx.request.body});
-//   ctx.response.status = 204
-// });
-
-// router.delete('/users/:name', async (ctx, next) => {
-//   // remove contact by id (ctx.params.id)
-//   console.log(ctx.params.name);
-//   const index = clients.findIndex(({ name }) => name === ctx.params.name);
-//   if (index !== -1) {
-//     clients.splice(index, 1);
-//   };
-//   ctx.response.status = 204
-// });
 
 wsServer.on('connection', (ws, req) => {
   console.log('connection');
   ws.on('message', (msg) => {
-    // console.log(msg);
-    // add in arr message
     arrMessges.push(msg);
 
     [...wsServer.clients]
@@ -171,6 +112,7 @@ wsServer.on('connection', (ws, req) => {
     })
     .forEach(o => o.send(msg));
   });
+
   ws.on('close', (msg) => {
     console.log('close');
     [...wsServer.clients]
@@ -181,13 +123,13 @@ wsServer.on('connection', (ws, req) => {
     .forEach(o => o.send(JSON.stringify({type: 'del user'})));
     ws.close();
   });
-  // new users
+
   [...wsServer.clients]
     .filter(o => {
       return o.readyState === WS.OPEN;
     })
     .forEach(o => o.send(JSON.stringify({type: 'add user'})));
-//  ws.send('welcome');
+
 });
 
 app.use(router.routes()).use(router.allowedMethods());
